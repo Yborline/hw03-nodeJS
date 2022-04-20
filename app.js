@@ -5,8 +5,6 @@ const mongoose = require("mongoose");
 const DB_HOST = require("./config");
 
 const contactsRouter = require("./routes/api/contacts");
-// mongodb+srv://Yarka:<password>@cluster0.zmcbk.mongodb.net/test
-// mongodb+srv://Yarka:nirvana1331@cluster0.zmcbk.mongodb.net/test
 
 mongoose
   .connect(DB_HOST)
