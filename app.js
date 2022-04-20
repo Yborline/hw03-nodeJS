@@ -2,12 +2,12 @@ const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const DB_HOST = require("./config");
 
 const contactsRouter = require("./routes/api/contacts");
 // mongodb+srv://Yarka:<password>@cluster0.zmcbk.mongodb.net/test
 // mongodb+srv://Yarka:nirvana1331@cluster0.zmcbk.mongodb.net/test
-const DB_HOST =
-  "mongodb+srv://Yarka:nirvana1331@cluster0.zmcbk.mongodb.net/contacts_shop?retryWrites=true&w=majority";
+
 mongoose
   .connect(DB_HOST)
   .then(() => console.log("database"))
