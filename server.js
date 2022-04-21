@@ -1,14 +1,14 @@
 const app = require("./app");
 const mongoose = require("mongoose");
 
-const PORT = process.env.PORT || 3000;
-const DB_HOST = process.env.DB_HOST;
+
+const { DB_HOST, PORT = 3000 } = process.env;
 
 mongoose
   .connect(DB_HOST)
   .then(() => {
     app.listen(PORT);
-    console.log(` ${PORT}`);
+    console.log(`Database connection successful. PORT = ${PORT}`);
   })
   .catch((error) => {
     console.log(error.message);

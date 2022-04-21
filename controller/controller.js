@@ -1,7 +1,4 @@
-// const fs = require('fs/promises')
-// const { v4: uuidv4 } = require("uuid");
-let contacts = require("../models/contacts.json");
-const Contact = require("..//models/schemaContacts");
+const { Contact } = require("..//models/schemaContacts");
 
 const listContacts = async (req, res, next) => {
   const result = await Contact.find({});
@@ -16,8 +13,8 @@ const listContacts = async (req, res, next) => {
 
 const getContactById = async (req, res, next) => {
   const { contactId } = req.params;
-  // const [contact] = contacts.filter((item) => item.id === contactId);
-  const result = contacts.find((item) => item.id === contactId);
+  const result = await Contact.findById(contactId);
+  // const result = await Contact.findOne({ _id: contactId });
   if (!result) {
     res.status(404).json({
       status: "error",
@@ -36,9 +33,7 @@ const getContactById = async (req, res, next) => {
 
 const removeContact = async (req, res, next) => {
   const { contactId } = req.params;
-  const result = contacts.find((item) => item.id === contactId);
-  contacts = contacts.filter((contact) => contact.id !== contactId);
-
+  const result = await Contact.findByIdAndRemove(contactId);
   if (!result) {
     res.status(400).json({
       status: "Not Found",
@@ -53,9 +48,7 @@ const removeContact = async (req, res, next) => {
 };
 
 const addContact = async (req, res, next) => {
-  // const { name, email, phone } = req.body;
   const result = await Contact.create(req.body);
-
   res.json({
     status: "success",
     code: 201,
@@ -67,14 +60,8 @@ const addContact = async (req, res, next) => {
 
 const updateContact = async (req, res, next) => {
   const { contactId } = req.params;
-  const { name, email, phone } = req.body;
-  const result = contacts.find((item) => item.id === contactId);
-  contacts.forEach((contact) => {
-    if (result) {
-      contact.email = email;
-      contact.name = name;
-      contact.phone = phone;
-    }
+  const result = await Contact.findByIdAndUpdate(contactId, req.body, {
+    new: true,
   });
   if (result) {
     res.status(201).json({
@@ -83,9 +70,32 @@ const updateContact = async (req, res, next) => {
       result: result,
     });
   }
-  res.status(400).json({
+  res.status(500).json({
     status: "error",
-    code: 400,
+    code: 500,
+  });
+};
+
+const updatFavorite = async (req, res, next) => {
+  const { contactId } = req.params;
+  const { favorite } = req.body;
+
+  const result = await Contact.findByIdAndUpdate(
+    contactId,
+    { favorite },
+    { new: true }
+  );
+  if (!result) {
+    res.status(404).json({
+      status: "error",
+      code: 404,
+      message: "Not found",
+    });
+  }
+  res.status(201).json({
+    status: "success",
+    code: 200,
+    result: result,
   });
 };
 
@@ -95,4 +105,5 @@ module.exports = {
   removeContact,
   addContact,
   updateContact,
+  updatFavorite,
 };
